@@ -419,68 +419,43 @@ function setEventListeners( canvas ){
 
 	document.getElementById("start").onclick = function(){
 		index=0;
-		intervalID = setInterval(sortArray, 300);
-
-		// var swapped;
-	    // do {
-	    //     swapped = false;
-	    //     for (var i=0; i < randomArray.length; i++) {
-	    //         if (randomArray[i] > randomArray[i+1]) {
-	    //             var temp = randomArray[i];
-	    //             randomArray[i] = randomArray[i+1];
-	    //             randomArray[i+1] = temp;
-	    //             swapped = true;
-		// 			console.log(i);
-		// 			console.log(i+1);
-		// 			switchBars(i, i+1);
-		// 			changeColors(i);
-		// 			changeColors(i+1);
-	    //         }
-		// 		console.log("ciclo");
-		// 		clockSwitch();
-		// 		break;
-	    //     }
-		// 	break;
-	    // } while (swapped);
-
-		console.log(randomArray);
-
-		clockSwitch();
-		// switchBars(14, 1);
-		// intervalID = setTimeout('clockSwitch();', 1000);
-
-
-
+		intervalID = setInterval(sortArray, 1000);
 	};
 }
 
 function sortArray() {
-	console.log("aa");
 	var swapped;
-	do {
-		swapped = false;
-		for (i=index; i < randomArray.length; i++) {
-			if (randomArray[i] > randomArray[i+1]) {
-				var temp = randomArray[i];
-				randomArray[i] = randomArray[i+1];
-				randomArray[i+1] = temp;
-				swapped = true;
-				console.log(i);
-				console.log(i+1);
-				switchBars(i, i+1);
-				changeColors(i);
-				changeColors(i+1);
-			}
-			index+=1;
-			if(index == randomArray.length){
-				index = 0;
-			}
-			console.log("ciclo");
-			clockSwitch();
-			break
+	swapped = false;
+	for (i=index; i < randomArray.length; i++) {
+		changeBlue(i+1);
+		if (randomArray[i] > randomArray[i+1]) {
+			var temp = randomArray[i];
+			randomArray[i] = randomArray[i+1];
+			randomArray[i+1] = temp;
+			swapped = true;
+			switchBars(i, i+1);
+			//changeColors(i);
+			//changeColors(i+1);
 		}
+		index+=1;
+		if(index == randomArray.length){
+			index = 0;
+		}
+		clockSwitch();
 		break;
-	} while (swapped);
+	}
+	changeColors(i);
+	changeColors(i+1);
+	if (isFinished()){
+		clearInterval(intervalID);
+	}
+}
+
+function isFinished(){
+	if (ArrayEqual(vertices, sortedVertices)){
+		return true;
+	}
+	return false;
 }
 
 //----------------------------------------------------------------------------
@@ -618,6 +593,12 @@ function changeGreen(pos){
 function changeRed(pos){
 	for(var i = 0; i < 36*3; i++){
 		colors[pos*36*3+i] = colorsRed[i];
+	}
+}
+
+function changeBlue(pos){
+	for(var i = 0; i < 36*3; i++){
+		colors[pos*36*3+i] = colorsBlue[i];
 	}
 }
 
