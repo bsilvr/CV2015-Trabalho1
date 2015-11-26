@@ -4,7 +4,7 @@
 //
 //  Interaction using the keyboard and the mouse
 //
-//  J. Madeira - November 2015
+//   - November 2015
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -13,6 +13,9 @@
 //
 // Global Variables
 //
+var randomArray = [6, 11, 15, 1, 4, 9, 10, 14, 0, 5, 17, 13, 8, 7, 2, 16, 3, 18, 12];
+
+var sortedVertices = null;
 
 var gl = null; // WebGL context
 
@@ -42,11 +45,11 @@ var angleZZ = 0.0;
 
 // The scaling factors
 
-var sx = 1.0;
+var sx = 0.9;
 
-var sy = 1.0;
+var sy = 0.9;
 
-var sz = 1.0;
+var sz = 0.9;
 
 // NEW - Animation controls
 
@@ -94,21 +97,15 @@ function initBuffers() {
 
 	// Coordinates
 
-	triangleVertexPositionBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 	triangleVertexPositionBuffer.itemSize = 3;
 	triangleVertexPositionBuffer.numItems = vertices.length / 3;
 
-	// Associating to the vertex shader
-
 	gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,
 			triangleVertexPositionBuffer.itemSize,
 			gl.FLOAT, false, 0, 0);
 
-	// Colors
-
-	triangleVertexColorBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer);
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
 	triangleVertexColorBuffer.itemSize = 3;
@@ -117,11 +114,23 @@ function initBuffers() {
 	// Associating to the vertex shader
 
 	gl.vertexAttribPointer(shaderProgram.vertexColorAttribute,
-			triangleVertexColorBuffer.itemSize,
-			gl.FLOAT, false, 0, 0);
+	triangleVertexColorBuffer.itemSize,
+	gl.FLOAT, false, 0, 0);
+
 }
 
 //----------------------------------------------------------------------------
+
+
+function switchBars(b1, b2){
+	for (var i = 1; i < 36*3; i+=3){
+		if (vertices[b1*36*3+i] != -0.8){
+			var temp = vertices[b1*36*3 +i];
+			vertices[b1*36*3+i] = vertices[b2*36*3+i];
+			vertices[b2*36*3+i] = temp;
+		}
+	}
+}
 
 //  Drawing the model
 
@@ -232,48 +241,11 @@ function drawScene() {
 
 	// Instance 1 --- RIGHT TOP
 
-	// drawModel( -angleXX, angleYY, angleZZ,
-	//            sx, sy, sz,
-	//            tx + 0.5, ty + 0.5, tz,
-	//            mvMatrix,
-	//            primitiveType );
-
-	// Instance 2 --- LEFT TOP
-
-	// drawModel( -angleXX, -angleYY, -angleZZ,  // CW rotations
-	//            sx, sy, sz,
-	//            tx - 0.5, ty + 0.5, tz,
-	//            mvMatrix,
-	//            primitiveType );
-
-	// Instance 3 --- LEFT BOTTOM
-
-	// drawModel( angleXX, angleYY, angleZZ,
-	//            sx, sy, sz,
-	//            tx -0.92, ty, tz,
-	//            mvMatrix,
-	//            primitiveType );
-	//
-	// // Instance 4 --- RIGHT BOTTOM
-	//
-	// drawModel( angleXX, angleYY, angleZZ,  // CW rotations
-	//            sx, sy, sz,
-	//            tx - 0.82, ty, tz,
-	//            mvMatrix,
-	//            primitiveType );
-
-
-	for(var i = 0; i<19; i++){
-		drawModel( angleXX, angleYY, angleZZ,
-		           sx, sy*(1-(i*0.05)), sz,
-		           tx -(0.92-(i*0.1)), ty-(i*0.04), tz,
-		           mvMatrix,
-		           primitiveType );
-
-	}
-}
-
-function switchBars(i1, i2){
+	drawModel( -angleXX, angleYY, angleZZ,
+	           sx, sy, sz,
+	           tx, ty, tz,
+	           mvMatrix,
+	           primitiveType );
 
 }
 
@@ -311,78 +283,6 @@ function animate() {
 	}
 
 	lastTime = timeNow;
-}
-
-//----------------------------------------------------------------------------
-
-// Handling keyboard events
-
-// Adapted from www.learningwebgl.com
-
-var currentlyPressedKeys = {};
-
-function handleKeys() {
-
-	if (currentlyPressedKeys[33]) {
-
-		// Page Up
-
-		sx *= 0.9;
-
-		sz = sy = sx;
-	}
-	if (currentlyPressedKeys[34]) {
-
-		// Page Down
-
-		sx *= 1.1;
-
-		sz = sy = sx;
-	}
-	if (currentlyPressedKeys[37]) {
-
-		// Left cursor key
-
-		if( rotationYY_ON == 0 ) {
-
-			rotationYY_ON = 1;
-		}
-
-		rotationYY_SPEED -= 0.25;
-	}
-	if (currentlyPressedKeys[39]) {
-
-		// Right cursor key
-
-		if( rotationYY_ON == 0 ) {
-
-			rotationYY_ON = 1;
-		}
-
-		rotationYY_SPEED += 0.25;
-	}
-	if (currentlyPressedKeys[38]) {
-
-		// Up cursor key
-
-		if( rotationXX_ON == 0 ) {
-
-			rotationXX_ON = 1;
-		}
-
-		rotationXX_SPEED -= 0.25;
-	}
-	if (currentlyPressedKeys[40]) {
-
-		// Down cursor key
-
-		if( rotationXX_ON == 0 ) {
-
-			rotationXX_ON = 1;
-		}
-
-		rotationXX_SPEED += 0.25;
-	}
 }
 
 //----------------------------------------------------------------------------
@@ -445,29 +345,22 @@ function tick() {
 
 	requestAnimFrame(tick);
 
+	//switchBars(0, 1);
+
+	//initBuffers();
+
 	// NEW --- Processing keyboard events
 
-	handleKeys();
 
 	drawScene();
 
 	//animate();
 }
 
-
-
-
-//----------------------------------------------------------------------------
-//
-//  User Interaction
-//
-
-function outputInfos(){
-
-}
-
 //----------------------------------------------------------------------------
 
+var intervalID;
+var index;
 function setEventListeners( canvas ){
 
 	// NEW ---Handling the mouse
@@ -480,160 +373,6 @@ function setEventListeners( canvas ){
 
     document.onmousemove = handleMouseMove;
 
-    // NEW ---Handling the keyboard
-
-	// From learningwebgl.com
-
-    function handleKeyDown(event) {
-
-        currentlyPressedKeys[event.keyCode] = true;
-    }
-
-    function handleKeyUp(event) {
-
-        currentlyPressedKeys[event.keyCode] = false;
-    }
-
-	document.onkeydown = handleKeyDown;
-
-    document.onkeyup = handleKeyUp;
-
-	// Dropdown list
-
-	var projection = document.getElementById("projection-selection");
-
-	projection.addEventListener("click", function(){
-
-		// Getting the selection
-
-		var p = projection.selectedIndex;
-
-		switch(p){
-
-			case 0 : projectionType = 0;
-				break;
-
-			case 1 : projectionType = 1;
-				break;
-		}
-	});
-
-
-	// Button events
-
-	document.getElementById("XX-on-off-button").onclick = function(){
-
-		// Switching on / off
-
-		if( rotationXX_ON ) {
-
-			rotationXX_ON = 0;
-		}
-		else {
-
-			rotationXX_ON = 1;
-		}
-	};
-
-	document.getElementById("XX-direction-button").onclick = function(){
-
-		// Switching the direction
-
-		if( rotationXX_DIR == 1 ) {
-
-			rotationXX_DIR = -1;
-		}
-		else {
-
-			rotationXX_DIR = 1;
-		}
-	};
-
-	document.getElementById("XX-slower-button").onclick = function(){
-
-		rotationXX_SPEED *= 0.75;
-	};
-
-	document.getElementById("XX-faster-button").onclick = function(){
-
-		rotationXX_SPEED *= 1.25;
-	};
-
-	document.getElementById("YY-on-off-button").onclick = function(){
-
-		// Switching on / off
-
-		if( rotationYY_ON ) {
-
-			rotationYY_ON = 0;
-		}
-		else {
-
-			rotationYY_ON = 1;
-		}
-	};
-
-	document.getElementById("YY-direction-button").onclick = function(){
-
-		// Switching the direction
-
-		if( rotationYY_DIR == 1 ) {
-
-			rotationYY_DIR = -1;
-		}
-		else {
-
-			rotationYY_DIR = 1;
-		}
-	};
-
-	document.getElementById("YY-slower-button").onclick = function(){
-
-		rotationYY_SPEED *= 0.75;
-	};
-
-	document.getElementById("YY-faster-button").onclick = function(){
-
-		rotationYY_SPEED *= 1.25;
-	};
-
-	document.getElementById("ZZ-on-off-button").onclick = function(){
-
-		// Switching on / off
-
-		if( rotationZZ_ON ) {
-
-			rotationZZ_ON = 0;
-		}
-		else {
-
-			rotationZZ_ON = 1;
-		}
-	};
-
-	document.getElementById("ZZ-direction-button").onclick = function(){
-
-		// Switching the direction
-
-		if( rotationZZ_DIR == 1 ) {
-
-			rotationZZ_DIR = -1;
-		}
-		else {
-
-			rotationZZ_DIR = 1;
-		}
-	};
-
-	document.getElementById("ZZ-slower-button").onclick = function(){
-
-		rotationZZ_SPEED *= 0.75;
-	};
-
-	document.getElementById("ZZ-faster-button").onclick = function(){
-
-		rotationZZ_SPEED *= 1.25;
-	};
 
 	document.getElementById("reset-button").onclick = function(){
 
@@ -651,11 +390,11 @@ function setEventListeners( canvas ){
 
 		angleZZ = 0.0;
 
-		sx = 1.0;
+		sx = 0.9;
 
-		sy = 1.0;
+		sy = 0.9;
 
-		sz = 1.0;
+		sz = 0.9;
 
 		rotationXX_ON = 0;
 
@@ -674,7 +413,74 @@ function setEventListeners( canvas ){
 		rotationZZ_DIR = 1;
 
 		rotationZZ_SPEED = 1;
+
+		clearInterval(intervalID);
 	};
+
+	document.getElementById("start").onclick = function(){
+		index=0;
+		intervalID = setInterval(sortArray, 300);
+
+		// var swapped;
+	    // do {
+	    //     swapped = false;
+	    //     for (var i=0; i < randomArray.length; i++) {
+	    //         if (randomArray[i] > randomArray[i+1]) {
+	    //             var temp = randomArray[i];
+	    //             randomArray[i] = randomArray[i+1];
+	    //             randomArray[i+1] = temp;
+	    //             swapped = true;
+		// 			console.log(i);
+		// 			console.log(i+1);
+		// 			switchBars(i, i+1);
+		// 			changeColors(i);
+		// 			changeColors(i+1);
+	    //         }
+		// 		console.log("ciclo");
+		// 		clockSwitch();
+		// 		break;
+	    //     }
+		// 	break;
+	    // } while (swapped);
+
+		console.log(randomArray);
+
+		clockSwitch();
+		// switchBars(14, 1);
+		// intervalID = setTimeout('clockSwitch();', 1000);
+
+
+
+	};
+}
+
+function sortArray() {
+	console.log("aa");
+	var swapped;
+	do {
+		swapped = false;
+		for (i=index; i < randomArray.length; i++) {
+			if (randomArray[i] > randomArray[i+1]) {
+				var temp = randomArray[i];
+				randomArray[i] = randomArray[i+1];
+				randomArray[i+1] = temp;
+				swapped = true;
+				console.log(i);
+				console.log(i+1);
+				switchBars(i, i+1);
+				changeColors(i);
+				changeColors(i+1);
+			}
+			index+=1;
+			if(index == randomArray.length){
+				index = 0;
+			}
+			console.log("ciclo");
+			clockSwitch();
+			break
+		}
+		break;
+	} while (swapped);
 }
 
 //----------------------------------------------------------------------------
@@ -718,14 +524,111 @@ function runWebGL() {
 
 	var canvas = document.getElementById("my-canvas");
 
+	projectionType = 1;
+
 	initWebGL( canvas );
+
+	triangleVertexPositionBuffer = gl.createBuffer();
+
+	triangleVertexColorBuffer = gl.createBuffer();
+
 
 	shaderProgram = initShaders( gl );
 
 	setEventListeners( canvas );
 
-	initBuffers();
+
+	createSortedBars();
+
+	setRandomBars(randomArray);
+
+
+	// switchBars(0, 1);
+	//
+
+	// NEW --- Processing keyboard events
+
+	//handleKeys();
+
+	//intervalID = setInterval(clockSwitch, 1000);
+
 
 	tick();		// A timer controls the rendering / animation
-	outputInfos();
+}
+
+function clockSwitch(a,b){
+	initBuffers();
+	drawScene();
+
+}
+
+
+function createSortedBars(){
+	var tmpColors = colors.slice(0, 36*3);
+	for (var i = 1; i < 19; i++){
+		var tmp = vertices.slice(0, 36*3);
+		for (var j = 1; j < 36*3; j+=3){
+			if (tmp[j] != -0.8){
+				tmp[j] = tmp[j] + 0.08*i;
+			}
+			tmp[j-1] += 0.1*i;
+		}
+		vertices = vertices.concat(tmp);
+		colors = colors.concat(tmpColors);
+
+	}
+	sortedVertices = vertices.slice();
+}
+
+function setRandomBars(randomArray){
+	for (var i = 0; i < 19; i++){
+		setBars(i, randomArray[i]);
+		changeColors(i);
+	}
+
+	initBuffers();
+
+	drawScene();
+}
+
+function setBars(b1, b2){
+	for (var i = 1; i < 36*3; i+=3){
+		if (vertices[b1*36*3+i] != -0.8){
+			vertices[b1*36*3+i] = sortedVertices[b2*36*3+i];
+		}
+	}
+}
+
+function changeColors(pos){
+	var a = vertices.slice(pos*36*3, pos*36*3 + 36*3);
+	var b = sortedVertices.slice(pos*36*3, pos*36*3 + 36*3);
+	if(ArrayEqual(a, b)){
+		changeGreen(pos);
+	}else{
+		changeRed(pos);
+	}
+}
+
+function changeGreen(pos){
+	for(var i = 0; i < 36*3; i++){
+		colors[pos*36*3+i] = colorsGreen[i];
+	}
+}
+
+function changeRed(pos){
+	for(var i = 0; i < 36*3; i++){
+		colors[pos*36*3+i] = colorsRed[i];
+	}
+}
+
+function ArrayEqual(a, b){
+	if (a.length != b.length){
+		return false;
+	}
+	for(var i = 0; i < a.length; i++){
+		if(a[i] != b[i]){
+			return false;
+		}
+	}
+	return true;
 }

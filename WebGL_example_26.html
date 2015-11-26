@@ -87,9 +87,11 @@ Passing the Model-View Matrix and the Projection Matrix.
 
 <script type="text/javascript" src="initShaders.js"></script>
 
+<script type="text/javascript" src="cubo.js"></script>
+
+
 <script type="text/javascript" src="WebGL_example_26.js"></script>
 
-<script type="text/javascript" src="cubo.js"></script>
 
 
 </head>
@@ -98,58 +100,13 @@ Passing the Model-View Matrix and the Projection Matrix.
 
 	<div style="text-align: center">
 
-		<p>Model animation using rotations</p>
 
 		<canvas id="my-canvas" style="border:1px solid #000000;" width="1200" height="800"></canvas>
 
-        <p>Use cursor keys to spin and <code>Page Up</code>/<code>Page Down</code> to zoom out/in.</p>
 
-		<p>Press any mouse button and move the cursor to rotate the models.</p>
+		<button id="start">Start</button>
 
-		<p>XX rotation:
 
-		<button id="XX-on-off-button">On / Off</button>
-
-	    <button id="XX-direction-button">Change Direction</button>
-
-	    <button id="XX-slower-button">Slower</button>
-
-	    <button id="XX-faster-button">Faster</button>
-
-		</p>
-
-		<p>YY rotation:
-
-		<button id="YY-on-off-button">On / Off</button>
-
-	    <button id="YY-direction-button">Change Direction</button>
-
-	    <button id="YY-slower-button">Slower</button>
-
-	    <button id="YY-faster-button">Faster</button>
-
-		</p>
-
-		<p>ZZ rotation:
-
-		<button id="ZZ-on-off-button">On / Off</button>
-
-	    <button id="ZZ-direction-button">Change Direction</button>
-
-	    <button id="ZZ-slower-button">Slower</button>
-
-	    <button id="ZZ-faster-button">Faster</button>
-
-		</p>
-
-		<p>Choose the <b>projection type</b>:
-
-        <select id="projection-selection">
-			<option value="0">Orthogonal Projection</option>
-			<option value="1">Perspective Projection</option>
-        </select>
-
-        </p>
 
 		<p>
 
