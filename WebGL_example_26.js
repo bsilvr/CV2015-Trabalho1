@@ -419,7 +419,7 @@ function setEventListeners( canvas ){
 
 	document.getElementById("start").onclick = function(){
 		index=0;
-		intervalID = setInterval(sortArray, 1000);
+		intervalID = setInterval(sortArray, 100);
 	};
 }
 
@@ -446,13 +446,15 @@ function sortArray() {
 	}
 	changeColors(i);
 	changeColors(i+1);
-	if (isFinished()){
+	if (isFinished(i)){
+		clockSwitch();
 		clearInterval(intervalID);
 	}
 }
 
-function isFinished(){
+function isFinished(i){
 	if (ArrayEqual(vertices, sortedVertices)){
+		
 		return true;
 	}
 	return false;
@@ -606,7 +608,7 @@ function ArrayEqual(a, b){
 	if (a.length != b.length){
 		return false;
 	}
-	for(var i = 0; i < a.length; i++){
+	for(var i = 1; i < a.length; i+=36){
 		if(a[i] != b[i]){
 			return false;
 		}
