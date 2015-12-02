@@ -429,8 +429,8 @@ function setEventListeners( canvas ){
 		index=0;
 		aux = 0;
 		min = randomArray[index];
-		//intervalID = setInterval(sortArrayBubble, 100);
-		intervalID = setInterval(sortArraySelection, 100);
+		intervalID = setInterval(sortArrayBubble, 100);
+		//intervalID = setInterval(sortArraySelection, 500);
 
 	};
 }
@@ -479,7 +479,7 @@ function sortArraySelection() {
 		aux = index;
 		min = aux;
 	}
-	changeColors(i);
+	changeColors(bluePos-1);
 	if (isFinished()){
 		clearInterval(intervalID);
 		console.log("Finished");
