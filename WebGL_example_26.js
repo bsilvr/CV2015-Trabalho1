@@ -15,6 +15,8 @@
 //
 var randomArray = [6, 11, 15, 1, 4, 9, 10, 14, 0, 5, 17, 13, 8, 7, 2, 16, 3, 18, 12];
 
+var bluePos = 0;
+
 var sortedVertices = null;
 
 var gl = null; // WebGL context
@@ -343,11 +345,13 @@ function handleMouseMove(event) {
 
 function tick() {
 
+	changeBlue(bluePos);
+
 	requestAnimFrame(tick);
 
 	//switchBars(0, 1);
 
-	//initBuffers();
+	initBuffers();
 
 	// NEW --- Processing keyboard events
 
@@ -419,15 +423,44 @@ function setEventListeners( canvas ){
 
 	document.getElementById("start").onclick = function(){
 		index=0;
-		intervalID = setInterval(sortArray, 100);
+		intervalID = setInterval(sortArrayBubble, 100);
 	};
 }
 
-function sortArray() {
+function sortArrayBubble() {
 	var swapped;
 	swapped = false;
 	for (i=index; i < randomArray.length; i++) {
-		changeBlue(i+1);
+		bluePos = i+1;
+		if (randomArray[i] > randomArray[i+1]) {
+			var temp = randomArray[i];
+			randomArray[i] = randomArray[i+1];
+			randomArray[i+1] = temp;
+			swapped = true;
+			switchBars(i, i+1);
+			//changeColors(i);
+			//changeColors(i+1);
+		}
+		index+=1;
+		if(index == randomArray.length){
+			index = 0;
+		}
+		clockSwitch();
+		break;
+	}
+	changeColors(i);
+	changeColors(i+1);
+	if (isFinished(i)){
+		clockSwitch();
+		clearInterval(intervalID);
+	}
+}
+
+function sortArrayBubble() {
+	var swapped;
+	swapped = false;
+	for (i=index; i < randomArray.length; i++) {
+		bluePos = i+1;
 		if (randomArray[i] > randomArray[i+1]) {
 			var temp = randomArray[i];
 			randomArray[i] = randomArray[i+1];
@@ -454,7 +487,7 @@ function sortArray() {
 
 function isFinished(i){
 	if (ArrayEqual(vertices, sortedVertices)){
-		
+
 		return true;
 	}
 	return false;
@@ -534,8 +567,8 @@ function runWebGL() {
 }
 
 function clockSwitch(a,b){
-	initBuffers();
-	drawScene();
+	//initBuffers();
+	//drawScene();
 
 }
 
