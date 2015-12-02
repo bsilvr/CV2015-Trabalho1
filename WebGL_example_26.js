@@ -456,7 +456,7 @@ function sortArrayBubble() {
 	}
 }
 
-function sortArrayBubble() {
+function sortArrayQuick() {
 	var swapped;
 	swapped = false;
 	for (i=index; i < randomArray.length; i++) {
