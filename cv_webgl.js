@@ -13,6 +13,8 @@
 //
 // Global Variables
 //
+var initVertex = [];
+
 var randomArray = [6, 11, 15, 1, 4, 9, 10, 14, 0, 5, 17, 13, 8, 7, 2, 16, 3, 18, 12];
 
 var bluePos = -1;
@@ -423,23 +425,41 @@ function setEventListeners( canvas ){
 		rotationZZ_SPEED = 1;
 
 		clearInterval(intervalID);
+
+		bluePos = -1;
+
+		// TODO - reset array positions
 	};
 
 	document.getElementById("start").onclick = function(){
-		// bluePos = 0;
-		//intervalID = setInterval(sortArrayBubble, 100); // buble
+		var s = document.getElementById("sort-select");
 
-		// Default values for selection
-		// index=0;
-		// aux = 0;
-		// bluePos = 0;
-		// min = randomArray[index];
-		//intervalID = setInterval(sortArraySelection, 100); // selection
+		var color = s.selectedIndex;
 
-		index=1;
-		aux = 1;
-		bluePos = 1;
-		intervalID = setInterval(sortArrayInsertion, 500);
+		var delay = 200
+
+		switch(color){
+					case 0 :
+						// Bubble Sort
+						bluePos = 0;
+						intervalID = setInterval(sortArrayBubble, delay);
+						break;
+					case 1 :
+						// Selection Sort
+						index=0;
+						aux = 0;
+						bluePos = 0;
+						min = randomArray[index];
+						intervalID = setInterval(sortArraySelection, delay);
+						break;
+					case 2 :
+						// Insertion Sort
+						index=1;
+						aux = 1;
+						bluePos = 1;
+						intervalID = setInterval(sortArrayInsertion, delay);
+						break;
+				}
 	};
 }
 
@@ -528,6 +548,7 @@ function sortArrayInsertion() {
 
 function isFinished(){
 	if (ArrayEqual(vertices, sortedVertices)){
+		bluePos = -1;
 		return true;
 	}
 	return false;
@@ -587,6 +608,8 @@ function runWebGL() {
 
 	setEventListeners( canvas );
 
+
+	initVertex = vertices;
 
 	createSortedBars();
 
