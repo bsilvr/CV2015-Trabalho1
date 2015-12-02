@@ -15,7 +15,7 @@
 //
 var randomArray = [6, 11, 15, 1, 4, 9, 10, 14, 0, 5, 17, 13, 8, 7, 2, 16, 3, 18, 12];
 
-var bluePos = 0;
+var bluePos = -1;
 
 var aux = 0;
 
@@ -426,12 +426,20 @@ function setEventListeners( canvas ){
 	};
 
 	document.getElementById("start").onclick = function(){
-		index=0;
-		aux = 0;
-		min = randomArray[index];
-		intervalID = setInterval(sortArrayBubble, 100);
-		//intervalID = setInterval(sortArraySelection, 500);
+		// bluePos = 0;
+		//intervalID = setInterval(sortArrayBubble, 100); // buble
 
+		// Default values for selection
+		// index=0;
+		// aux = 0;
+		// bluePos = 0;
+		// min = randomArray[index];
+		//intervalID = setInterval(sortArraySelection, 100); // selection
+
+		index=1;
+		aux = 1;
+		bluePos = 1;
+		intervalID = setInterval(sortArrayInsertion, 500);
 	};
 }
 
@@ -480,6 +488,38 @@ function sortArraySelection() {
 		min = aux;
 	}
 	changeColors(bluePos-1);
+	if (isFinished()){
+		clearInterval(intervalID);
+		console.log("Finished");
+	}
+}
+
+//	index = 1
+//	aux = 1
+function sortArrayInsertion() {
+	bluePos = aux-1;
+	changeColors(aux);
+	// if(index-1==0){
+	// 	changeColors(0);
+	// }
+	if (randomArray[aux] < randomArray[aux-1]) {
+		var temp = randomArray[aux];
+		randomArray[aux] = randomArray[aux-1];
+		randomArray[aux-1] = temp;
+		switchBars(aux, aux - 1);
+		changeColors(bluePos+1);
+		changeColors(aux);
+		changeColors(aux-1);
+
+		aux -=1;
+	}
+	else{
+		index+=1;
+		aux = index;
+		bluePos = aux;
+		changeColors(bluePos-1);
+	}
+	changeColors(bluePos);
 	if (isFinished()){
 		clearInterval(intervalID);
 		console.log("Finished");
