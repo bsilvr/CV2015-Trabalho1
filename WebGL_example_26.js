@@ -17,6 +17,10 @@ var randomArray = [6, 11, 15, 1, 4, 9, 10, 14, 0, 5, 17, 13, 8, 7, 2, 16, 3, 18,
 
 var bluePos = 0;
 
+var aux = 0;
+
+var mim = 0;
+
 var sortedVertices = null;
 
 var gl = null; // WebGL context
@@ -423,7 +427,11 @@ function setEventListeners( canvas ){
 
 	document.getElementById("start").onclick = function(){
 		index=0;
-		intervalID = setInterval(sortArrayBubble, 100);
+		aux = 0;
+		min = randomArray[index];
+		//intervalID = setInterval(sortArrayBubble, 100);
+		intervalID = setInterval(sortArraySelection, 100);
+
 	};
 }
 
@@ -438,56 +446,48 @@ function sortArrayBubble() {
 			randomArray[i+1] = temp;
 			swapped = true;
 			switchBars(i, i+1);
-			//changeColors(i);
-			//changeColors(i+1);
 		}
 		index+=1;
 		if(index == randomArray.length){
 			index = 0;
 		}
-		clockSwitch();
 		break;
 	}
 	changeColors(i);
 	changeColors(i+1);
-	if (isFinished(i)){
-		clockSwitch();
+	if (isFinished()){
 		clearInterval(intervalID);
 	}
 }
 
-function sortArrayQuick() {
-	var swapped;
-	swapped = false;
-	for (i=index; i < randomArray.length; i++) {
-		bluePos = i+1;
-		if (randomArray[i] > randomArray[i+1]) {
-			var temp = randomArray[i];
-			randomArray[i] = randomArray[i+1];
-			randomArray[i+1] = temp;
-			swapped = true;
-			switchBars(i, i+1);
-			//changeColors(i);
-			//changeColors(i+1);
-		}
+function sortArraySelection() {
+	var i = aux+1;
+	bluePos = i;
+	if (randomArray[min] > randomArray[i]) {
+		min = i;
+		console.log("Minimo");
+	}
+	aux+=1;
+	if(aux == randomArray.length){
+		var temp = randomArray[min];
+		randomArray[min] = randomArray[index];
+		randomArray[index] = temp;
+		switchBars(min, index);
+		changeColors(min);
+		changeColors(index);
 		index+=1;
-		if(index == randomArray.length){
-			index = 0;
-		}
-		clockSwitch();
-		break;
+		aux = index;
+		min = aux;
 	}
 	changeColors(i);
-	changeColors(i+1);
-	if (isFinished(i)){
-		clockSwitch();
+	if (isFinished()){
 		clearInterval(intervalID);
+		console.log("Finished");
 	}
 }
 
-function isFinished(i){
+function isFinished(){
 	if (ArrayEqual(vertices, sortedVertices)){
-
 		return true;
 	}
 	return false;
@@ -565,13 +565,6 @@ function runWebGL() {
 
 	tick();		// A timer controls the rendering / animation
 }
-
-function clockSwitch(a,b){
-	//initBuffers();
-	//drawScene();
-
-}
-
 
 function createSortedBars(){
 	var tmpColors = colors.slice(0, 36*3);
