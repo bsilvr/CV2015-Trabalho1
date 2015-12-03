@@ -8,6 +8,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////////////////////
+
+// Stats Variables
+var iterations = 0;
+
 
 //----------------------------------------------------------------------------
 //
@@ -438,7 +443,7 @@ function setEventListeners( canvas ){
 
 	document.getElementById("myRange").oninput = function(){
 		delay = document.getElementById("myRange").value;
-		document.getElementById("delay").innerHTML = "Delay between iterations:(ms) " + delay;
+		document.getElementById("delay").innerHTML = delay;
 
 		if(ongoing){
 			var s = document.getElementById("sort-select").selectedIndex;
@@ -484,6 +489,7 @@ function sortArrayBubble() {
 	if (isFinished()){
 		clearInterval(intervalID);
 	}
+	updateStats();
 }
 
 function sortArraySelection() {
@@ -491,7 +497,6 @@ function sortArraySelection() {
 	bluePos = i;
 	if (randomArray[min] > randomArray[i]) {
 		min = i;
-		console.log("Minimo");
 	}
 	aux+=1;
 	if(aux == randomArray.length){
@@ -508,18 +513,13 @@ function sortArraySelection() {
 	changeColors(bluePos-1);
 	if (isFinished()){
 		clearInterval(intervalID);
-		console.log("Finished");
 	}
+	updateStats();
 }
 
-//	index = 1
-//	aux = 1
 function sortArrayInsertion() {
 	bluePos = aux-1;
 	changeColors(aux);
-	// if(index-1==0){
-	// 	changeColors(0);
-	// }
 	if (randomArray[aux] < randomArray[aux-1]) {
 		var temp = randomArray[aux];
 		randomArray[aux] = randomArray[aux-1];
@@ -528,7 +528,6 @@ function sortArrayInsertion() {
 		changeColors(bluePos+1);
 		changeColors(aux);
 		changeColors(aux-1);
-
 		aux -=1;
 	}
 	else{
@@ -540,8 +539,8 @@ function sortArrayInsertion() {
 	changeColors(bluePos);
 	if (isFinished()){
 		clearInterval(intervalID);
-		console.log("Finished");
 	}
+	updateStats();
 }
 
 function isFinished(){
@@ -736,6 +735,8 @@ function reset(){
 
 		clearInterval(intervalID);
 
+		resetStats();
+
 		bluePos = -1;
 
 		ongoing = false;
@@ -744,3 +745,15 @@ function reset(){
 
 		setRandomBars(randomArray);
 }
+
+function updateStats(){
+	iterations +=1;
+	document.getElementById("iterations").innerHTML = iterations;
+}
+
+function resetStats(){
+	iterations = 0;
+	document.getElementById("iterations").innerHTML = iterations;
+
+}
+
