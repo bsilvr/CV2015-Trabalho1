@@ -14,8 +14,10 @@ var iterations = 0;
 var swaps = 0;
 
 // Global Variables
-var initArray = [];
-var randomArray = [6, 11, 15, 1, 4, 9, 10, 14, 0, 5, 17, 13, 8, 7, 2, 16, 3, 18, 12];
+var randomArray = [];
+var defaultRandomArray = [6, 11, 15, 1, 4, 9, 10, 14, 0, 5, 17, 13, 8, 19, 7, 2, 16, 3, 18, 12];
+var defaultNearlySortedArray = [0, 2, 1, 3, 4, 6, 5, 9, 7, 8, 10, 11, 12, 14, 13, 15, 16, 19, 17, 18];
+var defaultReversedArray = [19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
 var bluePos = -1;
 var ongoing = false;
 var paused = false;
@@ -45,9 +47,9 @@ var angleYY = 0.0;
 var angleZZ = 0.0;
 
 // The scaling factors
-var sx = 0.9;
-var sy = 0.9;
-var sz = 0.9;
+var sx = 0.8;
+var sy = 0.8;
+var sz = 0.8;
 
 // Animation controls
 var rotationXX_ON = 1;
@@ -122,6 +124,7 @@ function initWebGL( canvas ) {
 }
 
 function runWebGL() {
+	document.getElementById("custom-array-form").style.display = "none";
 	var canvas = document.getElementById("my-canvas");
 	initWebGL(canvas);
 
@@ -130,9 +133,8 @@ function runWebGL() {
 	shaderProgram = initShaders(gl);
 	setEventListeners(canvas);
 
+	randomArray = defaultRandomArray.slice();
 	createSortedBars();
-	initArray = randomArray.slice();
-	initVertex = vertices.slice();
 	setRandomBars(randomArray);
 
 	tick();
@@ -192,7 +194,7 @@ function setEventListeners( canvas ){
     document.onmousemove = handleMouseMove;
 
 	document.getElementById("reset-button").onclick = function(){
-		reset();
+		changeSelectedArray();
 	};
 
 	document.getElementById("start").onclick = function(){
@@ -237,7 +239,7 @@ function setEventListeners( canvas ){
 	};
 
 	document.getElementById("sort-select").onchange = function(){
-		reset();
+		changeSelectedArray();
 	};
 
 	document.getElementById("myRange").oninput = function(){
@@ -261,6 +263,14 @@ function setEventListeners( canvas ){
 					break;
 			}
 		}
+	};
+
+	document.getElementById("custom-array").onclick = function(){
+		document.getElementById("custom-array").style.display = "none";
+		showArrayFields();
+	};
+	document.getElementById("array-select").onchange = function(){
+		changeSelectedArray();
 	};
 }
 
@@ -444,9 +454,9 @@ function reset(){
 		angleXX = 0.0;
 		angleYY = 0.0;
 		angleZZ = 0.0;
-		sx = 0.9;
-		sy = 0.9;
-		sz = 0.9;
+		sx = 0.8;
+		sy = 0.8;
+		sz = 0.8;
 		rotationXX_ON = 0;
 		rotationXX_DIR = 1;
 		rotationXX_SPEED = 1;
@@ -462,7 +472,6 @@ function reset(){
 		bluePos = -1;
 		ongoing = false;
 		paused = false;
-		randomArray = initArray.slice();
 		setRandomBars(randomArray);
 }
 
@@ -476,4 +485,31 @@ function resetStats(){
 	swaps = 0;
 	document.getElementById("iterations").innerHTML = iterations;
 	document.getElementById("swaps").innerHTML = swaps;
+}
+
+function showArrayFields(){
+	var form = document.getElementById("custom-array-form");
+	for(var i = 0; i < randomArray.length; i++){
+		form.innerHTML += "<input style=\"max-width:20px\" type=\"text\" id=\"" + i + "\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+	}
+	form.innerHTML += "<input type=\"submit\">"
+	form.style.display = "block";
+}
+
+function changeSelectedArray(){
+	var s = document.getElementById("array-select").selectedIndex;
+	switch(s){
+				case 0 :
+					randomArray = defaultRandomArray.slice();
+					break;
+				case 1 :
+					randomArray = defaultNearlySortedArray.slice();
+					break;
+				case 2 :
+					randomArray = defaultReversedArray.slice();
+					break;
+			}
+	console.log("changing");
+	setRandomBars(randomArray);
+	reset();
 }
