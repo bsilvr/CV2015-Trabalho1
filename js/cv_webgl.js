@@ -2,7 +2,7 @@
 //
 //	Universidade de Aveiro - 2015
 //
-//	Computação Visual - Trabalho 1 WebGL
+//	Computação Visual - Trabalho 1 (WebGL)
 //
 //	Bruno Silva - 68535
 //	Bernardo Ferreira - 67413
