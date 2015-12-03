@@ -19,6 +19,10 @@ var randomArray = [6, 11, 15, 1, 4, 9, 10, 14, 0, 5, 17, 13, 8, 7, 2, 16, 3, 18,
 
 var bluePos = -1;
 
+var ongoing = false;
+
+var delay = 200;
+
 var aux = 0;
 
 var mim = 0;
@@ -386,61 +390,15 @@ function setEventListeners( canvas ){
 
 	document.getElementById("reset-button").onclick = function(){
 
-		// The initial values
-
-		tx = 0.0;
-
-		ty = 0.0;
-
-		tz = 0.0;
-
-		angleXX = 0.0;
-
-		angleYY = 0.0;
-
-		angleZZ = 0.0;
-
-		sx = 0.9;
-
-		sy = 0.9;
-
-		sz = 0.9;
-
-		rotationXX_ON = 0;
-
-		rotationXX_DIR = 1;
-
-		rotationXX_SPEED = 1;
-
-		rotationYY_ON = 0;
-
-		rotationYY_DIR = 1;
-
-		rotationYY_SPEED = 1;
-
-		rotationZZ_ON = 0;
-
-		rotationZZ_DIR = 1;
-
-		rotationZZ_SPEED = 1;
-
-		clearInterval(intervalID);
-
-		bluePos = -1;
-
-		randomArray = initArray.slice();
-
-		setRandomBars(randomArray);
+		reset();
 	};
 
 	document.getElementById("start").onclick = function(){
 		var s = document.getElementById("sort-select");
 
-		var color = s.selectedIndex;
+		var sel = s.selectedIndex;
 
-		var delay = 200
-
-		switch(color){
+		switch(sel){
 					case 0 :
 						// Bubble Sort
 						index=0;
@@ -463,6 +421,22 @@ function setEventListeners( canvas ){
 						intervalID = setInterval(sortArrayInsertion, delay);
 						break;
 				}
+	};
+
+	document.getElementById("pause").onclick = function(){
+		clearInterval(intervalID);
+		var t = bluePos;
+		bluePos = -1;
+		changeColors(t);
+	};
+
+	document.getElementById("sort-select").onchange = function(){
+		reset();
+	};
+
+	document.getElementById("myRange").onchange = function(){
+		delay = document.getElementById("myRange").value;
+		document.getElementById("delay").innerHTML = "Delay between iterations: " + delay;
 	};
 }
 
@@ -552,6 +526,7 @@ function sortArrayInsertion() {
 function isFinished(){
 	if (ArrayEqual(vertices, sortedVertices)){
 		bluePos = -1;
+		ongoing = false;
 		return true;
 	}
 	return false;
@@ -697,4 +672,54 @@ function ArrayEqual(a, b){
 		}
 	}
 	return true;
+}
+
+function reset(){
+	// The initial values
+
+		tx = 0.0;
+
+		ty = 0.0;
+
+		tz = 0.0;
+
+		angleXX = 0.0;
+
+		angleYY = 0.0;
+
+		angleZZ = 0.0;
+
+		sx = 0.9;
+
+		sy = 0.9;
+
+		sz = 0.9;
+
+		rotationXX_ON = 0;
+
+		rotationXX_DIR = 1;
+
+		rotationXX_SPEED = 1;
+
+		rotationYY_ON = 0;
+
+		rotationYY_DIR = 1;
+
+		rotationYY_SPEED = 1;
+
+		rotationZZ_ON = 0;
+
+		rotationZZ_DIR = 1;
+
+		rotationZZ_SPEED = 1;
+
+		clearInterval(intervalID);
+
+		bluePos = -1;
+
+		ongoing = false;
+
+		randomArray = initArray.slice();
+
+		setRandomBars(randomArray);
 }

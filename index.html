@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Computação Visual - Trabalho 1 (WebGL)</title>
+
+    <!-- Bootstrap Core CSS -->
+
+    <!-- Custom CSS -->
+    <link href="css/4-col-portfolio.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="dist/css/bootstrap-select.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="dist/js/bootstrap-select.js"></script>
+
+    <script type="text/javascript" src="js/webgl-utils.js"></script>
+
+    <!-- Handling vectors and matrices -->
+
+    <script type="text/javascript" src="js/maths.js"></script>
+
+    <!-- WebGL code -->
+
+    <script type="text/javascript" src="js/initShaders.js"></script>
+
+    <script type="text/javascript" src="js/cubo.js"></script>
+
+
+    <script type="text/javascript" src="js/cv_webgl.js"></script>
+
+
+    <script id="shader-vs" type="x-shader/x-vertex">
+
+        attribute vec3 aVertexPosition;
+
+        attribute vec3 aVertexColor;
+
+        uniform mat4 uMVMatrix;
+
+        uniform mat4 uPMatrix;
+
+        varying vec4 vertexColor;
+
+        void main(void) {
+
+            // To allow seeing the points drawn
+
+            gl_PointSize = 5.0;
+
+            // Just converting the (x,y,z) vertices to Homogeneous Coord.
+
+            // And multiplying by the Projection and the Model-View matrix
+
+            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+
+            // Converting the RGB color value to RGBA
+
+            vertexColor = vec4(aVertexColor, 1.0);
+        }
+    </script>
+
+    <script id="shader-fs" type="x-shader/x-fragment">
+
+        precision mediump float;
+
+        varying vec4 vertexColor;
+
+        void main(void) {
+
+            // Using the passed vertex color
+
+            gl_FragColor = vertexColor;
+        }
+
+    </script>
+
+    <style>
+    body {
+      padding-top: 70px;
+    }
+    </style>
+
+</head>
+
+<body onload="runWebGL();">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Sorting Algorithms</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#">About</a>
+                    </li>
+                    <li>
+                        <a href="#">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+
+        <p></p>
+
+        <select class="selectpicker" id="sort-select" data-live-search="true">
+            <option value="0">Bubble Sort</option>
+            <option value="1">Selection Sort</option>
+            <option value="2">Insertion Sort</option>
+        </select>
+
+
+        <p></p>
+
+        <button id="start">Start</button>
+
+        <p>
+
+            <button id="reset-button">Reset</button>
+
+        </p>
+
+        <canvas id="my-canvas" width="1000" height="600"></canvas>
+
+
+    </div>
+
+
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Copyright &copy; Sorting Algorithms 2015</p>
+            </div>
+        </div>
+    </footer>
+
+</div>
+<!-- /.container -->
+
+<!-- jQuery -->
+<script src="js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    var mySelect = $('#first-disabled2');
+
+    $('#special').on('click', function () {
+      mySelect.find('option:selected').prop('disabled', true);
+      mySelect.selectpicker('refresh');
+    });
+
+    $('#special2').on('click', function () {
+      mySelect.find('option:disabled').prop('disabled', false);
+      mySelect.selectpicker('refresh');
+    });
+
+    $('#basic2').selectpicker({
+      liveSearch: true,
+      maxOptions: 1
+    });
+  });
+</script>
+
+</body>
+
+</html>
