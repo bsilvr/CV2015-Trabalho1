@@ -18,6 +18,7 @@ var randomArray = [];
 var defaultRandomArray = [6, 11, 15, 1, 4, 9, 10, 14, 0, 5, 17, 13, 8, 19, 7, 2, 16, 3, 18, 12];
 var defaultNearlySortedArray = [0, 2, 1, 3, 4, 6, 5, 9, 7, 8, 10, 11, 12, 14, 13, 15, 16, 19, 17, 18];
 var defaultReversedArray = [19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+var customArray = [];
 var bluePos = -1;
 var ongoing = false;
 var paused = false;
@@ -124,7 +125,8 @@ function initWebGL( canvas ) {
 }
 
 function runWebGL() {
-	document.getElementById("custom-array-form").style.display = "none";
+	document.getElementById("custom-array").style.display = "none";
+	document.getElementById("error-div").style.display = "none";
 	var canvas = document.getElementById("my-canvas");
 	initWebGL(canvas);
 
@@ -265,11 +267,11 @@ function setEventListeners( canvas ){
 		}
 	};
 
-	document.getElementById("custom-array").onclick = function(){
-		document.getElementById("custom-array").style.display = "none";
-		showArrayFields();
-	};
 	document.getElementById("array-select").onchange = function(){
+		document.getElementById("error").innerHTML = "";
+		if(document.getElementById("array-select").selectedIndex != 3){
+			document.getElementById("custom-array").style.display = "none";
+		}
 		changeSelectedArray();
 	};
 }
@@ -489,27 +491,74 @@ function resetStats(){
 
 function showArrayFields(){
 	var form = document.getElementById("custom-array-form");
+	form.innerHTML = "";
 	for(var i = 0; i < randomArray.length; i++){
-		form.innerHTML += "<input style=\"max-width:20px\" type=\"text\" id=\"" + i + "\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+		if(i % 10 == 0){
+			form.innerHTML += "<br><br>";
+		}
+		form.innerHTML += "<input style=\"max-width:25px\" maxlength=\"2\" type=\"text\" id=\"" + i + "\">&nbsp;&nbsp;";
 	}
-	form.innerHTML += "<input type=\"submit\">"
 	form.style.display = "block";
+	document.getElementById("custom-array").style.display = "block";
 }
 
 function changeSelectedArray(){
+	document.getElementById("error-div").style.display = "none";
 	var s = document.getElementById("array-select").selectedIndex;
 	switch(s){
-				case 0 :
-					randomArray = defaultRandomArray.slice();
-					break;
-				case 1 :
-					randomArray = defaultNearlySortedArray.slice();
-					break;
-				case 2 :
-					randomArray = defaultReversedArray.slice();
-					break;
-			}
-	console.log("changing");
-	setRandomBars(randomArray);
+		case 0 :
+			randomArray = defaultRandomArray.slice();
+			break;
+		case 1 :
+			randomArray = defaultNearlySortedArray.slice();
+			break;
+		case 2 :
+			randomArray = defaultReversedArray.slice();
+			break;
+		case 3 :
+			showArrayFields();
+			break;
+	}
 	reset();
+}
+
+function changeCustomArray(){
+	console.log(randomArray.length);
+	var tmp;
+	for(var i = 0; i < randomArray.length; i++){
+		tmp = document.getElementById(i.toString()).value;
+		console.log(tmp);
+		if(tmp == ""){
+			displayError("Empty Value found at position " + parseInt(i+1));
+			return;
+		}
+		tmp = parseInt(tmp);
+		if(tmp < 0 || tmp > 19){
+			displayError("Found Value out of range at position " + parseInt(i+1));
+			return;
+		}
+		customArray[i]= tmp;
+	}
+	if(customArray.length != randomArray.length){
+		displayError("Some internal error occured");
+		customArray = [];
+		return;
+	}
+	for(i = 0; i < randomArray.length; i++){
+		if(customArray.indexOf(i) == -1){
+			displayError("All numbers from 0 to 19 must be present");
+			customArray = [];
+			return;
+		}
+	}
+	randomArray = customArray.slice();
+	document.getElementById("custom-array").style.display = "none";
+	reset();
+}
+
+function displayError(error){
+	document.getElementById("custom-array").style.display = "none";
+	document.getElementById("error").innerHTML = error;
+	document.getElementById("error-div").style.display = "block";
+
 }

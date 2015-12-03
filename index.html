@@ -100,14 +100,18 @@
                     <option value="0">Random Array</option>
                     <option value="1">Nearly Sorted Array</option>
                     <option value="2">Reversed Array</option>
+                    <option value="3">Custom Array</option>
                 </select>
             </div>
             <br>
-            <br>
-            <br>
-            <div>
-                <button class="btn btn-default" id="custom-array">Insert Custom Array</button>
+            <div style="text-align: center" id="custom-array">
+                <h6>User must input all 20 values ranging from 0 to 19, all values must be present which implies no repetitions</h6>
                 <form id="custom-array-form"></form>
+                <br>
+                <button class="btn btn-success" id="submit" onclick="changeCustomArray()">Insert</button>
+            </div>
+            <div id="error-div" class="alert alert-danger" role="alert">
+                <h3 id="error"></h3>
             </div>
         </div>
 
