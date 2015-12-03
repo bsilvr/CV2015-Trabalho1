@@ -104,13 +104,13 @@
                 </select>
             </div>
             <br>
-            <div style="text-align: center" id="custom-array">
+            <div style="text-align: center; display: none" id="custom-array">
                 <h6>User must input all 20 values ranging from 0 to 19, all values must be present which implies no repetitions</h6>
                 <form id="custom-array-form"></form>
                 <br>
-                <button class="btn btn-success" id="submit" onclick="changeCustomArray()">Insert</button>
+                <button class="btn btn-success" id="submit" onclick="changeCustomArray()">Try</button>
             </div>
-            <div id="error-div" class="alert alert-danger" role="alert">
+            <div id="error-div" style="display: none" class="alert alert-danger" role="alert">
                 <h3 id="error"></h3>
             </div>
         </div>

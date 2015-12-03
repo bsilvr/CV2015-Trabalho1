@@ -176,9 +176,9 @@ function handleMouseMove(event) {
     var newX = event.clientX;
     var newY = event.clientY;
     var deltaX = newX - lastMouseX;
-    angleYY += radians( 10 * deltaX  )
+    angleYY += radians(10 * deltaX)
     var deltaY = newY - lastMouseY;
-    angleXX += radians( 10 * deltaY  )
+    angleXX += radians(10 * deltaY)
     lastMouseX = newX
     lastMouseY = newY;
   }
@@ -523,11 +523,9 @@ function changeSelectedArray(){
 }
 
 function changeCustomArray(){
-	console.log(randomArray.length);
 	var tmp;
 	for(var i = 0; i < randomArray.length; i++){
 		tmp = document.getElementById(i.toString()).value;
-		console.log(tmp);
 		if(tmp == ""){
 			displayError("Empty Value found at position " + parseInt(i+1));
 			return;
@@ -546,7 +544,7 @@ function changeCustomArray(){
 	}
 	for(i = 0; i < randomArray.length; i++){
 		if(customArray.indexOf(i) == -1){
-			displayError("All numbers from 0 to 19 must be present");
+			displayError("All numbers from 0 to " + parseInt(randomArray.length-1) + " must be present");
 			customArray = [];
 			return;
 		}
@@ -560,5 +558,4 @@ function displayError(error){
 	document.getElementById("custom-array").style.display = "none";
 	document.getElementById("error").innerHTML = error;
 	document.getElementById("error-div").style.display = "block";
-
 }
