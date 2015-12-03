@@ -438,7 +438,7 @@ function setEventListeners( canvas ){
 
 	document.getElementById("myRange").oninput = function(){
 		delay = document.getElementById("myRange").value;
-		document.getElementById("delay").innerHTML = "Delay between iterations: " + delay;
+		document.getElementById("delay").innerHTML = "Delay between iterations:(ms) " + delay;
 
 		if(ongoing){
 			var s = document.getElementById("sort-select").selectedIndex;
