@@ -1,164 +1,119 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Sorting Algoritms</title>
+    <head>
+        <title>Sorting Algoritms</title>
 
-  <meta charset="utf-8">
+        <meta charset="utf-8">
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-  <link rel="stylesheet" href="dist/css/bootstrap-select.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <link rel="stylesheet" href="dist/css/bootstrap-select.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
-  <style>
-    body {
-      padding-top: 70px;
-    }
-  </style>
+        <style>
+            body {
+              padding-top: 70px;
+            }
+        </style>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-  <script src="dist/js/bootstrap-select.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <script src="dist/js/bootstrap-select.js"></script>
 
+        <script type="text/javascript" src="js/webgl-utils.js"></script>
+        <script type="text/javascript" src="js/maths.js"></script>
+        <script type="text/javascript" src="js/initShaders.js"></script>
+        <script type="text/javascript" src="js/cubo.js"></script>
+        <script type="text/javascript" src="js/cv_webgl.js"></script>
 
+        <script id="shader-vs" type="x-shader/x-vertex">
+            attribute vec3 aVertexPosition;
+            attribute vec3 aVertexColor;
+            uniform mat4 uMVMatrix;
+            uniform mat4 uPMatrix;
+            varying vec4 vertexColor;
+            void main(void) {
+                gl_PointSize = 5.0;
+                gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+                vertexColor = vec4(aVertexColor, 1.0);
+            }
+        </script>
 
-  <script type="text/javascript" src="js/webgl-utils.js"></script>
+        <script id="shader-fs" type="x-shader/x-fragment">
+            precision mediump float;
+            varying vec4 vertexColor;
+            void main(void) {
+                gl_FragColor = vertexColor;
+            }
+        </script>
 
-    <!-- Handling vectors and matrices -->
+    </head>
+    <body onload="runWebGL();">
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Sorting Algoritms</a>
+                </div>
+            </div>
+        </nav>
 
-  <script type="text/javascript" src="js/maths.js"></script>
-
-    <!-- WebGL code -->
-
-  <script type="text/javascript" src="js/initShaders.js"></script>
-
-  <script type="text/javascript" src="js/cubo.js"></script>
-
-
-  <script type="text/javascript" src="js/cv_webgl.js"></script>
-
-
-  <script id="shader-vs" type="x-shader/x-vertex">
-
-        attribute vec3 aVertexPosition;
-
-        attribute vec3 aVertexColor;
-
-        uniform mat4 uMVMatrix;
-
-        uniform mat4 uPMatrix;
-
-        varying vec4 vertexColor;
-
-        void main(void) {
-
-            // To allow seeing the points drawn
-
-            gl_PointSize = 5.0;
-
-            // Just converting the (x,y,z) vertices to Homogeneous Coord.
-
-            // And multiplying by the Projection and the Model-View matrix
-
-            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-
-            // Converting the RGB color value to RGBA
-
-            vertexColor = vec4(aVertexColor, 1.0);
-        }
-    </script>
-
-    <script id="shader-fs" type="x-shader/x-fragment">
-
-        precision mediump float;
-
-        varying vec4 vertexColor;
-
-        void main(void) {
-
-            // Using the passed vertex color
-
-            gl_FragColor = vertexColor;
-        }
-
-    </script>
-
-</head>
-<body onload="runWebGL();">
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">Sorting Algoritms</a>
-    </div>
-  </div>
-</nav>
-
-
-    <div class="col-lg-9">
-        <hr>
-        <canvas id="my-canvas" width="1000" height="600"></canvas>
-        <hr>
-    </div>
-
-    <div class="col-lg-3" style="text-align: center">
-        <hr>
-
-        <h4>Select Algorithm</h4>
-        <select class="selectpicker" id="sort-select" data-live-search="true">
-            <option value="0">Bubble Sort</option>
-            <option value="1">Selection Sort</option>
-            <option value="2">Insertion Sort</option>
-        </select>
-
-        <p>
-        <br>
-        <br>
-
-        </p>
-        <div>
-          <button class="btn btn-info" id="reset-button"><i class="fa fa-stop"></i></button>
-
-          <button class="btn btn-info" id="start"><i class="fa fa-play"></i></button>
-
-          <button class="btn btn-info" id="pause"><i class="fa fa-pause"></i></i></button>
+        <div class="col-lg-9">
+            <hr>
+            <canvas id="my-canvas" width="1000" height="600"></canvas>
+            <hr>
         </div>
-        <hr>
-        <div>
-          <h4>Delay between iterations:(ms) <span class="label label-default" id="delay">200</span></h4>
 
-          <input class="form-control" type="range" id="myRange" value="200" min="100" max="1000" step="1">
+        <div class="col-lg-3" style="text-align: center">
+            <hr>
+            <h4>Select Algorithm</h4>
+            <select class="selectpicker" id="sort-select" data-live-search="true">
+                <option value="0">Bubble Sort</option>
+                <option value="1">Selection Sort</option>
+                <option value="2">Insertion Sort</option>
+            </select>
 
+            <p><br><br></p>
+
+            <div>
+                <button class="btn btn-info" id="reset-button"><i class="fa fa-stop"></i></button>
+
+                <button class="btn btn-info" id="start"><i class="fa fa-play"></i></button>
+
+                <button class="btn btn-info" id="pause"><i class="fa fa-pause"></i></i></button>
+            </div>
+            <hr>
+            <div>
+                <h4>Delay between iterations:(ms) <span class="label label-default" id="delay">200</span></h4>
+                <input class="form-control" type="range" id="myRange" value="200" min="100" max="1000" step="1">
+            </div>
+            <hr>
+            <div>
+                <h3>Stats</h3>
+                <div style="text-align: left">
+                    <h4>Iterations: <span id="iterations" class="label label-default">0</span></h4>
+                </div>
+                <hr>
+            </div>
         </div>
-        <hr>
-        <div>
-          <h3>Stats</h3>
-          <div style="text-align: left">
-            <h4>Iterations: <span id="iterations" class="label label-default">0</span></h4>
-          </div>
 
-        </div>
-    </div>
+        <script>
+            $(document).ready(function () {
+              var mySelect = $('#first-disabled2');
 
-</div>
+              $('#special').on('click', function () {
+                mySelect.find('option:selected').prop('disabled', true);
+                mySelect.selectpicker('refresh');
+            });
 
-<script>
-  $(document).ready(function () {
-    var mySelect = $('#first-disabled2');
+              $('#special2').on('click', function () {
+                mySelect.find('option:disabled').prop('disabled', false);
+                mySelect.selectpicker('refresh');
+            });
 
-    $('#special').on('click', function () {
-      mySelect.find('option:selected').prop('disabled', true);
-      mySelect.selectpicker('refresh');
-    });
-
-    $('#special2').on('click', function () {
-      mySelect.find('option:disabled').prop('disabled', false);
-      mySelect.selectpicker('refresh');
-    });
-
-    $('#basic2').selectpicker({
-      liveSearch: true,
-      maxOptions: 1
-    });
-  });
-</script>
-</body>
+              $('#basic2').selectpicker({
+                liveSearch: true,
+                maxOptions: 1
+            });
+          });
+        </script>
+    </body>
 </html>
