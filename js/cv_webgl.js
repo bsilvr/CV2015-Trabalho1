@@ -394,6 +394,7 @@ function setEventListeners( canvas ){
 	};
 
 	document.getElementById("start").onclick = function(){
+		ongoing = true;
 		var s = document.getElementById("sort-select");
 
 		var sel = s.selectedIndex;
@@ -425,6 +426,7 @@ function setEventListeners( canvas ){
 
 	document.getElementById("pause").onclick = function(){
 		clearInterval(intervalID);
+		ongoing = false;
 		var t = bluePos;
 		bluePos = -1;
 		changeColors(t);
@@ -434,9 +436,28 @@ function setEventListeners( canvas ){
 		reset();
 	};
 
-	document.getElementById("myRange").onchange = function(){
+	document.getElementById("myRange").oninput = function(){
 		delay = document.getElementById("myRange").value;
 		document.getElementById("delay").innerHTML = "Delay between iterations: " + delay;
+
+		if(ongoing){
+			var s = document.getElementById("sort-select").selectedIndex;
+			clearInterval(intervalID);
+			switch(s){
+				case 0 :
+					// Bubble Sort
+					intervalID = setInterval(sortArrayBubble, delay);
+					break;
+				case 1 :
+					// Selection Sort
+					intervalID = setInterval(sortArraySelection, delay);
+					break;
+				case 2 :
+					// Insertion Sort
+					intervalID = setInterval(sortArrayInsertion, delay);
+					break;
+			}
+		}
 	};
 }
 
