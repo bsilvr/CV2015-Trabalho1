@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-//  WebGL_example_26.js
 //
-//  Interaction using the keyboard and the mouse
 //
-//   - November 2015
+//
+//
+//
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -13,7 +13,7 @@
 //
 // Global Variables
 //
-var initVertex = [];
+var initArray = [];
 
 var randomArray = [6, 11, 15, 1, 4, 9, 10, 14, 0, 5, 17, 13, 8, 7, 2, 16, 3, 18, 12];
 
@@ -428,7 +428,9 @@ function setEventListeners( canvas ){
 
 		bluePos = -1;
 
-		// TODO - reset array positions
+		randomArray = initArray.slice();
+
+		setRandomBars(randomArray);
 	};
 
 	document.getElementById("start").onclick = function(){
@@ -441,6 +443,7 @@ function setEventListeners( canvas ){
 		switch(color){
 					case 0 :
 						// Bubble Sort
+						index=0;
 						bluePos = 0;
 						intervalID = setInterval(sortArrayBubble, delay);
 						break;
@@ -609,22 +612,13 @@ function runWebGL() {
 	setEventListeners( canvas );
 
 
-	initVertex = vertices;
-
 	createSortedBars();
 
+	initArray = randomArray.slice();
+
+	initVertex = vertices.slice();
+
 	setRandomBars(randomArray);
-
-
-	// switchBars(0, 1);
-	//
-
-	// NEW --- Processing keyboard events
-
-	//handleKeys();
-
-	//intervalID = setInterval(clockSwitch, 1000);
-
 
 	tick();		// A timer controls the rendering / animation
 }
